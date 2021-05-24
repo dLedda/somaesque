@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="70635ef7-86ab-4681-b98d-dc8e4999995b" name="Default Changelist" comment="" />
+    <list default="true" id="70635ef7-86ab-4681-b98d-dc8e4999995b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/rollup.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/CubeInput.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Sidebar.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/SolutionInteractor.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/SomaSolution.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/SomaSolver.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/solver/main.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Polycube.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Polycube.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SomaSolver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SomaSolver.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VoxelSpace.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VoxelSpace.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/solver/VoxelSpace.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,11 +37,19 @@
       <list>
         <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="Sidebar" />
+        <option value="SolutionInteractor" />
+        <option value="CubeInput" />
         <option value="TypeScript File" />
+        <option value="store.svelte" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1shUz7NMSUxY207ip64fWIgaebh" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,12 +65,15 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/solver" />
     </key>
   </component>
   <component name="RunManager">
@@ -59,28 +95,32 @@
       <option name="presentableId" value="Default" />
       <updated>1621324574891</updated>
       <workItem from="1621324585296" duration="36860000" />
+      <workItem from="1621693865854" duration="13218000" />
+      <workItem from="1621766446732" duration="8746000" />
+      <workItem from="1621840729810" duration="13293000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/src/main.js" />
-        <option value="$PROJECT_DIR$/src/VoxelSpace.js" />
-        <option value="$PROJECT_DIR$/src/SomaSolver.js" />
-        <option value="$PROJECT_DIR$/src/test.js" />
-      </list>
-    </option>
   </component>
   <component name="WindowStateProjectService">
     <state x="643" y="194" width="614" height="706" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1621349929863">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="643" y="194" width="614" height="706" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1621349929863" />
-    <state x="624" y="245" key="run.anything.popup" timestamp="1621340767679">
+    <state x="449" y="175" width="1022" height="737" key="SettingsEditor" timestamp="1621857249174">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="449" y="175" width="1022" height="737" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1621857249174" />
+    <state x="741" y="455" width="438" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1621773490794">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="741" y="455" width="438" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1621773490794" />
+    <state x="1248" y="245" key="run.anything.popup" timestamp="1621713204008">
+      <screen x="0" y="27" width="3840" height="1053" />
+    </state>
+    <state x="1248" y="245" key="run.anything.popup/0.27.3840.1053@0.27.3840.1053" timestamp="1621713204008" />
     <state x="624" y="245" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1621340767679" />
     <state x="623" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1621363038727">
       <screen x="0" y="27" width="1920" height="1053" />
