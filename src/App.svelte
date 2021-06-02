@@ -3,6 +3,15 @@
 	import SolutionInteractor from "./SolutionInteractor.svelte";
 </script>
 
+<main>
+	<div class="sidebarContainer">
+		<Sidebar />
+	</div>
+	<div class="solutionBodyContainer">
+		<SolutionInteractor />
+	</div>
+</main>
+
 <style>
 	main {
 		display: flex;
@@ -46,12 +55,3 @@
 		}
 	}
 </style>
-
-<main>
-	<div class="sidebarContainer">
-		<Sidebar />
-	</div>
-	<div class="solutionBodyContainer">
-		<SolutionInteractor />
-	</div>
-</main>

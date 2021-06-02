@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {somaDimension, polycubes, selectedCube} from "./store";
+    import {somaDimension, polycubes, selectedCube, showingSolution} from "./store";
     export let cubeNo: number;
 
     $: dimension = $somaDimension;
@@ -52,6 +52,11 @@
     function dragDist() {
         return Math.sqrt((cellDragStartPos.x - cellDragEndPos.x) ** 2 + (cellDragStartPos.y - cellDragEndPos.y) ** 2);
     }
+
+    function onClickCube() {
+        showingSolution.set(false);
+        selectedCube.set(cubeNo)
+    }
 </script>
 
 <div
@@ -59,7 +64,7 @@
     class:active={currentlyVisualised}
     style="--color: {cubeColor}; --dimension: {dimension};"
     on:contextmenu|preventDefault
-    on:mousedown={() => selectedCube.set(cubeNo)}
+    on:mousedown={onClickCube}
 >
     <h1>Cube: {cubeNo + 1}</h1>
     {#each {length: dimension} as _, x}
@@ -92,8 +97,16 @@
         font-size: 1em;
         text-align: center;
     }
+    .cube:hover:not(.active) {
+        transform: scale(1.03);
+        filter: brightness(1.1);
+    }
     .cube {
-        padding: 1em;
+        border-radius: 1em;
+        background-color: #666666;
+        cursor: pointer;
+        transition: transform 200ms;
+        padding: 1em 2em 1em 2em;
         user-select: none;
     }
     .cell {

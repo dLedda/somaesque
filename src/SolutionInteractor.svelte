@@ -14,12 +14,18 @@
         </div>
     {/each}
 </div>
-<Polycube3D/>
+<div class="threedee">
+    <Polycube3D/>
+</div>
 
 <style>
+    .threedee {
+        text-align: center;
+    }
     .cube-input {
     }
     .input-container {
+        padding: 1em;
         display: flex;
         justify-content: space-around;
         flex-flow: row wrap;

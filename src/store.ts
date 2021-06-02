@@ -1,5 +1,6 @@
 import { derived, writable } from 'svelte/store';
 import { get } from 'svelte/store';
+import type SomaSolution from "./solver/SomaSolution";
 
 type PolycubeInput = {
     color: string,
@@ -15,16 +16,21 @@ const store = {
 };
 
 export const selectedCube = writable(0);
-export const isMaxDimension = derived(store.somaDimension, $somaDimension => $somaDimension >= MAX_DIMS);
-export const isMinDimension = derived(store.somaDimension, $somaDimension => $somaDimension <= MIN_DIMS);
-export const isMaxPolycubes = derived([store.polycubes, store.somaDimension], ([$polycubes, $somaDimension]) => $polycubes.length >= $somaDimension ** 3);
-export const isMinPolycubes = derived(store.polycubes, ($polycubes) => $polycubes.length <= 1);
+export const isMaxDimension = derived(store.somaDimension, ($somaDimension: number) => $somaDimension >= MAX_DIMS);
+export const isMinDimension = derived(store.somaDimension, ($somaDimension: number) => $somaDimension <= MIN_DIMS);
+export const isMaxPolycubes = derived(
+    [store.polycubes, store.somaDimension],
+    ([$polycubes, $somaDimension]: [PolycubeInput[], number]) => $polycubes.length >= $somaDimension ** 3);
+export const isMinPolycubes = derived(store.polycubes, ($polycubes: PolycubeInput[]) => $polycubes.length <= 1);
+export const solutions = writable([] as SomaSolution[]);
+export const activeSolution = writable(0);
+export const showingSolution = writable(false);
 
 export const somaDimension = {
     subscribe: store.somaDimension.subscribe,
     inc() {
         if (!get(isMaxDimension)) {
-            store.somaDimension.update(dims => {
+            store.somaDimension.update((dims: number) => {
                 polycubes.reset(dims + 1);
                 return dims + 1;
             });
@@ -32,7 +38,7 @@ export const somaDimension = {
     },
     dec() {
         if (!get(isMinDimension)) {
-            store.somaDimension.update(dims => {
+            store.somaDimension.update((dims: number) => {
                 polycubes.reset(dims - 1);
                 return dims - 1;
             });
@@ -45,7 +51,7 @@ export const polycubes = {
     addCube() {
         const isMaxPolycubes = get(store.polycubes).length >= get(store.somaDimension) ** 3;
         if (!isMaxPolycubes) {
-            store.polycubes.update(polycubes => polycubes.concat({
+            store.polycubes.update((polycubes: PolycubeInput[]) => polycubes.concat({
                 rep: BigInt(0),
                 color: colorFromIndex(polycubes.length),
             }));
@@ -54,7 +60,11 @@ export const polycubes = {
     removeCube() {
         const isMinPolycubes = get(store.polycubes).length <= 1;
         if (!isMinPolycubes) {
-            store.polycubes.update(polycubes => polycubes.splice(0, polycubes.length - 1));
+            store.polycubes.update((polycubes: PolycubeInput[]) => polycubes.splice(0, polycubes.length - 1));
+        }
+        const newLength = get(store.polycubes).length;
+        if (newLength <= get(selectedCube)) {
+            selectedCube.set(newLength - 1);
         }
     },
     toggle(cubeIndex: number, x: number, y: number, z: number) {
@@ -76,7 +86,7 @@ export const polycubes = {
         store.polycubes.set(cubes);
     },
     reset(dims: number) {
-        store.polycubes.update(polycubes => {
+        store.polycubes.update((polycubes: PolycubeInput[]) => {
             const result: PolycubeInput[] = [];
             for (let i = 0; i < Math.min(polycubes.length, dims**3); i++) {
                 result.push({

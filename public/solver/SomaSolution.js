@@ -1,17 +1,12 @@
-import type VoxelSpace from "./VoxelSpace";
-
 export default class SomaSolution {
-    private solutionSpaces: VoxelSpace[];
-    private dim: number;
-    constructor(dim: number) {
+    constructor(dim) {
         if (dim < 0 || dim % 1 !== 0) {
             throw new Error("Dimension must be a whole positive integer!");
         }
         this.dim = dim;
         this.solutionSpaces = [];
     }
-
-    static filterUnique(solutions: SomaSolution[]): SomaSolution[] {
+    static filterUnique(solutions) {
         if (solutions.length === 0) {
             return [];
         }
@@ -32,12 +27,11 @@ export default class SomaSolution {
         }
         return uniqueSolns;
     }
-
-    getUniqueRotations(): SomaSolution[] {
+    getUniqueRotations() {
         if (this.solutionSpaces.length === 0) {
             return [];
         }
-        const result: SomaSolution[] = [];
+        const result = [];
         const allRots = this.solutionSpaces.map(space => space.getAllRotations());
         for (let i = 0; i < allRots[0].length; i++) {
             const solnRot = new SomaSolution(this.dim);
@@ -46,8 +40,7 @@ export default class SomaSolution {
         }
         return result;
     }
-
-    matches(solution: SomaSolution) {
+    matches(solution) {
         for (let i = 0; i < this.solutionSpaces.length; i++) {
             if (!this.solutionSpaces[i].matches(solution.solutionSpaces[i])) {
                 return false;
@@ -55,11 +48,9 @@ export default class SomaSolution {
         }
         return true;
     }
-
-    addSpace(space: VoxelSpace) {
+    addSpace(space) {
         this.solutionSpaces.push(space);
     }
-
     print() {
         let accum = "";
         console.log("---");
@@ -81,8 +72,7 @@ export default class SomaSolution {
         }
         console.log("---");
     }
-
-    at(x: number, y: number, z: number) {
+    at(x, y, z) {
         for (const space of this.solutionSpaces) {
             if (space.at(x, y, z)) {
                 return space.getId();
@@ -90,24 +80,9 @@ export default class SomaSolution {
         }
         return 0;
     }
-
     clone() {
         const clone = new SomaSolution(this.dim);
         clone.solutionSpaces = this.solutionSpaces.slice();
         return clone;
-    }
-
-    getDims() {
-        return [this.dim, this.dim, this.dim];
-    }
-
-    forEachCell(cb: (val: number, x: number, y: number, z: number) => any) {
-        loopStart: for (let x = 0; x < this.dim; x++) {
-            for (let y = 0; y < this.dim; y++) {
-                for (let z = 0; z < this.dim; z++) {
-                    cb(this.at(x, y, z), x, y, z);
-                }
-            }
-        }
     }
 }
