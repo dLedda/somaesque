@@ -1,6 +1,6 @@
 import { derived, writable } from 'svelte/store';
 import { get } from 'svelte/store';
-import type SomaSolution from "./solver/SomaSolution";
+import type SomaSolution from "./SomaSolution";
 
 type PolycubeInput = {
     color: string,
@@ -23,7 +23,7 @@ export const isMaxPolycubes = derived(
     ([$polycubes, $somaDimension]: [PolycubeInput[], number]) => $polycubes.length >= $somaDimension ** 3);
 export const isMinPolycubes = derived(store.polycubes, ($polycubes: PolycubeInput[]) => $polycubes.length <= 1);
 export const solutions = writable([] as SomaSolution[]);
-export const activeSolution = writable(0);
+export const activeSolution = writable<number | null>(null);
 export const showingSolution = writable(false);
 
 export const somaDimension = {
@@ -42,6 +42,12 @@ export const somaDimension = {
                 polycubes.reset(dims - 1);
                 return dims - 1;
             });
+        }
+    },
+    set(dims: number) {
+        if (dims <= MAX_DIMS && dims >= MIN_DIMS) {
+            polycubes.reset(dims);
+            store.somaDimension.set(dims);
         }
     }
 };
@@ -107,5 +113,5 @@ function colorFromIndex(index: number) {
     let hue = spacing * (index % 6) + offset;
     const saturation = 100;
     const lightness = 1 / (2 + darknessCycle) * 100;
-    return `hsl(${hue},${saturation}%,${lightness}%)`;
+    return `hsl(${hue},${saturation}%,${Math.round(lightness)}%)`;
 }    

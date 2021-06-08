@@ -2,3 +2,4 @@
 /public/build/
 /.vscode
 /.idea
+/src/solver/node_modules/
