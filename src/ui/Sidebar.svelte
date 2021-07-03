@@ -1,8 +1,13 @@
 <script lang="ts">
-    import {isMaxPolycubes, isMinPolycubes, somaDimension, polycubes, solutions} from "../store";
-    import SomaSolution from "../SomaSolution";
+    import {
+        isMaxPolycubes,
+        isMinPolycubes,
+        polycubes,
+        solutions,
+        colorFromIndex,
+        activeSolution, showingSolution, totalVolume, somaDimX, somaDimY, somaDimZ, debug
+    } from "../store";
     import SolutionList from "./SolutionList.svelte";
-    import VoxelSpace from "../VoxelSpace";
 
     $: numCubes = $polycubes.length;
     $: cubes = $polycubes;
@@ -11,57 +16,16 @@
     let readyToSolve: boolean;
     let size: number;
     $: {
-        const dim = $somaDimension as number;
-        const polycubes: VoxelSpace[] = cubes.map(cubeInput => new VoxelSpace(0, [dim, dim, dim], cubeInput.rep));
-        size = polycubes.reduce((prev, cube) => cube.size() + prev, 0);
-        noEmpties = polycubes.reduce((prev, cube) => (cube.size() !== 0) && prev, true);
-        enoughSubcubes = size === dim**3;
-        readyToSolve = size === dim**3 && noEmpties;
-    }
-    let solving = false;
-    const worker = new Worker('../solver/main.js', {type: "module"});
-
-    async function respondWasm(event: MessageEvent) {
-        const dim = $somaDimension as number;
-        solutions.set(event.data.map((wasmSolution) => {
-            const solnObj = new SomaSolution(dim);
-            const spaceReps = wasmSolution.split(",");
-            for (let i = 0; i < spaceReps.length; i++) {
-                solnObj.addSpace(new VoxelSpace(i, [dim, dim, dim], BigInt(parseInt(spaceReps[i]))));
-            }
-            return solnObj;
-        }));
-        solving = false;
-    }
-
-    function respondJs(event: MessageEvent) {
-        solutions.set(event.data.map(solnData => {
-            const solution = new SomaSolution(solnData.dim);
-            solnData.solutionSpaces.forEach((voxelSpace, i) => solution.addSpace(new VoxelSpace(i, [solnData.dim, solnData.dim, solnData.dim], voxelSpace.space)));
-            return solution;
-        }));
-        solving = false;
-    }
-
-    function solveJs() {
-        worker.onmessage = (e) => respondJs(e);
-        const polycubes = cubes.map(cubeInput => cubeInput.rep);
-        solving = true;
-        worker.postMessage({type: 'js', polycubes, dims: $somaDimension});
-    }
-
-    function solveWasm() {
-        worker.onmessage = (e) => respondWasm(e);
-        const polycubes = cubes.map(cubeInput => cubeInput.rep);
-        console.log(polycubes);
-        solving = true;
-        worker.postMessage({type: 'wasm', polycubes, dims: $somaDimension});
+        size = cubes.reduce((prev, cube) => cube.size() + prev, 0);
+        noEmpties = cubes.reduce((prev, cube) => (cube.size() !== 0) && prev, true);
+        enoughSubcubes = size === $totalVolume;
+        readyToSolve = enoughSubcubes && noEmpties;
     }
 
     function genTooltip() {
         let messages = [];
         if (!enoughSubcubes) {
-            messages.push(`You have not input enough subcubes to form a cube with a side length of ${$somaDimension}. Needed: ${$somaDimension**3}, current: ${size}.`);
+            messages.push(`You have not input enough subcubes to form a rectangular prism with side lengths ${$somaDimX}, ${$somaDimY}, and ${$somaDimZ}. Needed: ${$totalVolume}, current: ${size}.`);
         }
         if (!noEmpties) {
             messages.push("You have left some of the polycube inputs empty. Remove them to solve.");
@@ -74,34 +38,34 @@
     <h1>Somaesque</h1>
     <div class="widgets">
         <div class="option">
-            <p>Dimension:</p>
+            <p>Dimensions:</p>
             <div class="choice">
-                <button
-                    class:selected={$somaDimension === 2}
-                    on:click={() => somaDimension.set(2)}
-                    disabled={$somaDimension === 2}>
-                    2
-                </button>
-                <button
-                    class:selected={$somaDimension === 3}
-                    on:click={() => somaDimension.set(3)}
-                    disabled={$somaDimension === 3}>
-                    3
-                </button>
-                <button
-                    class:selected={$somaDimension === 4}
-                    on:click={() => somaDimension.set(4)}
-                    disabled={$somaDimension === 4}>
-                    4
-                </button>
+                X
+                <input
+                    type="number"
+                    value="3"
+                    on:input={(e) => somaDimX.set(e.target.valueAsNumber)}/>
+                Y
+                <input
+                    type="number"
+                    value="3"
+                    on:input={(e) => somaDimY.set(e.target.valueAsNumber)}/>
+                Z
+                <input
+                    type="number"
+                    value="3"
+                    on:input={(e) => somaDimZ.set(e.target.valueAsNumber)}/>
+                {#if $totalVolume > 32}
+                    <p class="warn">The total number of units exceeds 32. Attempting to solve puzzles with more than 32 units results in significantly slower computation time.</p>
+                {/if}
             </div>
         </div>
 
         <div class="option">
             <p>Cubes:</p>
             <div class="choice">
-                <p>{numCubes}</p>
                 <button on:click={polycubes.removeCube} disabled={$isMinPolycubes}>-</button>
+                <p>{numCubes}</p>
                 <button on:click={polycubes.addCube} disabled={$isMaxPolycubes}>+</button>
             </div>
         </div>
@@ -109,7 +73,7 @@
         <div class="option">
             <button
                 class="solve"
-                on:click={solveWasm}
+                on:click={solve}
                 title="{genTooltip(enoughSubcubes, noEmpties, size)}"
                 disabled="{solving || !readyToSolve}">
                 {solving ? "Solving..." : "Solve!"}
@@ -121,6 +85,9 @@
 </div>
 
 <style>
+    .warn {
+        color: red;
+    }
     p {
         margin: 0;
         display: inline-block;
@@ -130,10 +97,10 @@
         text-align: center;
         margin-top: 1em;
     }
-    button {
+    input {
         display: inline-block;
         background-color: #999999;
-        width: 2em;
+        width: 3em;
         height: 2em;
         border-style: none;
     }

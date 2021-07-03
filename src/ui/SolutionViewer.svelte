@@ -1,36 +1,49 @@
 <script lang="ts">
-    import PolycubeScene from "./threedee/PolycubeScene.ts";
+    import PolycubeScene from "./threedee/PolycubeScene";
     import {onMount} from "svelte";
-    import {polycubes, somaDimension, selectedCube, solutions, activeSolution, showingSolution} from "../store";
+    import {polycubes, selectedCube, solutions, activeSolution, showingSolution, somaDimX, somaDimY, somaDimZ} from "../store";
     import Solution2D from "./Solution2D.svelte";
+    import VoxelSpaceBoolean from "../VoxelSpaceBoolean";
 
     $: cube = $polycubes[$selectedCube];
     $: soln = $solutions[$activeSolution];
     let el: HTMLCanvasElement;
-    let threeTest: PolycubeScene;
+    let scene: PolycubeScene;
     let loaded: boolean = false;
 
     onMount(() => {
-        threeTest = new PolycubeScene(el, () => loaded = true, console.log);
+        scene = new PolycubeScene(el, () => loaded = true, console.log);
     });
+
+    window.getPermutations = () => {
+        const newCube: VoxelSpaceBoolean = cube.clone() as VoxelSpaceBoolean;
+        (newCube as VoxelSpaceBoolean).cullEmptySpace();
+        return (newCube as VoxelSpaceBoolean).getAllPermutationsInPrism($somaDimX, $somaDimY, $somaDimZ);
+    }
+
+    window.showRot = (rot: VoxelSpaceBoolean) => {
+        scene?.showPolycube(rot);
+    }
 
     $: {
         if (loaded) {
             if ($showingSolution) {
                 const colorMap = {};
                 $polycubes.forEach((polycube, i) => colorMap[i] = polycube.color);
-                threeTest?.showSolution(soln, colorMap);
+                scene?.showSolution(soln);
             } else {
-                threeTest?.showPolycube(cube.rep, $somaDimension, cube.color);
+                scene?.showPolycube(cube);
             }
         }
     }
 </script>
 
 <div class="top">
-    <div class="soln2d-container">
-        <Solution2D/>
-    </div>
+    {#if $activeSolution !== null}
+        <div class="soln2d-container">
+            <Solution2D/>
+        </div>
+    {/if}
     <canvas
         bind:this={el}
         width="640"

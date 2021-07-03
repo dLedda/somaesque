@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {polycubes, activeSolution, showingSolution, solutions} from "../store";
+    import {activeSolution, showingSolution, solutions} from "../store";
     import SomaSolution from "../SomaSolution";
 
-    $: solutionDisplayed = $solutions[$activeSolution];
-    $: dimension = (solutionDisplayed && solutionDisplayed.getDims?.()[0]) ?? 3;
+    $: solnToShow = $solutions[$activeSolution];
+    $: dims = (solnToShow?.getDims?.()) ?? [3, 3, 3];
 
     function colorAt(soln: SomaSolution, x: number, y: number, z: number) {
-        return $polycubes[soln.at(z, dimension-1-x, y)].color;
+        return solnToShow.getPieces()[soln.at(x, y, z)]?.getColor?.() ?? "red";
     }
 </script>
 
@@ -14,19 +14,18 @@
     <div
         class="cube"
         class:active={$showingSolution}
-        style="--dimension: {dimension};"
         on:click={() => showingSolution.set(true)}
     >
         <h1>Solution #{$activeSolution + 1}</h1>
         <div class="center">
-            {#each {length: dimension} as _, x}
+            {#each {length: dims[0]} as _, x}
                 <div class="layer">
-                    {#each {length: dimension} as _, y}
+                    {#each {length: dims[1]} as _, y}
                         <div class="row">
-                            {#each {length: dimension} as _, z}
+                            {#each {length: dims[2]} as _, z}
                                 <div
                                     class="cell"
-                                    style="background-color:{colorAt(solutionDisplayed, x, y, z)}; border-color: {colorAt(solutionDisplayed, x, y, z)}"
+                                    style="background-color:{colorAt(solnToShow, x, y, z)}; border-color: {colorAt(solnToShow, x, y, z)}"
                                     class:filled={true}
                                 />
                             {/each}

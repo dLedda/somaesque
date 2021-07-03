@@ -7,8 +7,8 @@
       "debug": true
     },
     "release": {
-      "binaryFile": "../../public/solver/main.wasm",
-      "textFile": "../../public/solver/main.wat",
+      "binaryFile": "../../../public/solver/main.wasm",
+      "textFile": "../../../public/solver/main.wat",
       "sourceMap": false,
       "optimizeLevel": 3,
       "shrinkLevel": 1,

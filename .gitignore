@@ -3,3 +3,7 @@
 /.vscode
 /.idea
 /src/solver/node_modules/
+/desktop-dist
+/**/node_modules
+/src/solver/wasm/build
+out/

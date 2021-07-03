@@ -13,19 +13,16 @@ export default class VoxelSpace {
     private length: i32;
     private space: i64;
     private id: i32;
-    private dimx: i32;
-    private dimy: i32;
-    private dimz: i32;
+    private dimX: i32;
+    private dimY: i32;
+    private dimZ: i32;
 
     constructor(id: i32, dimx: i32, dimy: i32, dimz: i32, space: i64 = 0, cullEmpty: boolean = false) {
-        if (!space) {
-            space = 0;
-        }
         this.id = id;
         this.length = dimx * dimy * dimz;
-        this.dimx = dimx;
-        this.dimy = dimy;
-        this.dimz = dimz;
+        this.dimX = dimx;
+        this.dimY = dimy;
+        this.dimZ = dimz;
         this.space = space;
         if (cullEmpty) {
             this.cullEmptySpace();
@@ -35,15 +32,15 @@ export default class VoxelSpace {
     getExtrema(): Extrema {
         const extrema = new Extrema(
             0,
-            i32.MAX_VALUE,
+            this.dimX,
             0,
-            i32.MAX_VALUE,
+            this.dimY,
             0,
-            i32.MAX_VALUE,
+            this.dimZ,
         );
-        for (let x = 0; x < this.dimx; x++) {
-            for (let y = 0; y < this.dimy; y++) {
-                for (let z = 0; z < this.dimz; z++) {
+        for (let x = 0; x < this.dimX; x++) {
+            for (let y = 0; y < this.dimY; y++) {
+                for (let z = 0; z < this.dimZ; z++) {
                     const val = this.at(x, y, z);
                     if (val) {
                         extrema.xMax = Math.max(extrema.xMax, x) as i32;
@@ -61,8 +58,8 @@ export default class VoxelSpace {
 
     private cullEmptySpace(): void {
         const extrema = this.getExtrema();
-        let index = 0;
-        let newSpace = 0;
+        let index: i32 = 0;
+        let newSpace: i64 = 0;
         for (let x = extrema.xMin; x <= extrema.xMax; x++) {
             for (let y = extrema.yMin; y <= extrema.yMax; y++) {
                 for (let z = extrema.zMin; z <= extrema.zMax; z++) {
@@ -73,9 +70,9 @@ export default class VoxelSpace {
                 }
             }
         }
-        this.dimx = extrema.xMax - extrema.xMin + 1;
-        this.dimy = extrema.yMax - extrema.yMin + 1;
-        this.dimz = extrema.zMax - extrema.zMin + 1;
+        this.dimX = extrema.xMax - extrema.xMin + 1;
+        this.dimY = extrema.yMax - extrema.yMin + 1;
+        this.dimZ = extrema.zMax - extrema.zMin + 1;
         this.space = newSpace;
     }
 
@@ -134,45 +131,44 @@ export default class VoxelSpace {
         }
     }
 
-    getAllPositionsInCube(cubeDim: i32): VoxelSpace[] {
-        if ((cubeDim > 0) && (cubeDim % 1 == 0)) {
-            const cubePositions: VoxelSpace[] = [];
-            for (let x = 0; x < cubeDim - this.dimx + 1; x++) {
-                for (let y = 0; y < cubeDim - this.dimy + 1; y++) {
-                    for (let z = 0; z < cubeDim - this.dimz + 1; z++) {
-                        const cubePos = new VoxelSpace(this.id, cubeDim, cubeDim, cubeDim);
-                        for (let rotX = 0; rotX < this.dimx; rotX++) {
-                            for (let rotY = 0; rotY < this.dimy; rotY++) {
-                                for (let rotZ = 0; rotZ < this.dimz; rotZ++) {
-                                    cubePos.set(x + rotX, y + rotY, z + rotZ, this.at(rotX, rotY, rotZ));
-                                }
+    getAllPositionsInPrism(cubeDimX: i32, cubeDimY: i32, cubeDimZ: i32): VoxelSpace[] {
+        const cubePositions: VoxelSpace[] = [];
+        if (this.dimX > cubeDimX || this.dimY > cubeDimY || this.dimZ > cubeDimZ) {
+            return cubePositions;
+        }
+        for (let x = 0; x < (cubeDimX - this.dimX + 1); x++) {
+            for (let y = 0; y < (cubeDimY - this.dimY + 1); y++) {
+                for (let z = 0; z < (cubeDimZ - this.dimZ + 1); z++) {
+                    const cubePos = new VoxelSpace(this.id, cubeDimX, cubeDimY, cubeDimZ);
+                    for (let posX = 0; posX < this.dimX; posX++) {
+                        for (let posY = 0; posY < this.dimY; posY++) {
+                            for (let posZ = 0; posZ < this.dimZ; posZ++) {
+                                cubePos.set(x + posX, y + posY, z + posZ, this.at(posX, posY, posZ));
                             }
                         }
-                        cubePositions.push(cubePos);
                     }
+                    cubePositions.push(cubePos);
                 }
             }
-            return cubePositions;
-        } else {
-            throw new Error("cubeDim must be a positive integer.");
         }
+        return cubePositions;
     }
 
     matches(space: VoxelSpace): boolean {
-        if (space.dimx !== this.dimx) {
+        if (space.dimX !== this.dimX) {
             return false;
         }
-        if (space.dimy !== this.dimy) {
+        if (space.dimY !== this.dimY) {
             return false;
         }
-        if (space.dimz !== this.dimz) {
+        if (space.dimZ !== this.dimZ) {
             return false;
         }
         return this.space == space.getRaw();
     }
 
     clone(): VoxelSpace {
-        return new VoxelSpace(this.id, this.dimx, this.dimy, this.dimz, this.getRaw());
+        return new VoxelSpace(this.id, this.dimX, this.dimY, this.dimZ, this.getRaw());
     }
 
     private getXAxisSpins(): VoxelSpace[] {
@@ -192,35 +188,35 @@ export default class VoxelSpace {
     // [0, 0, -1] * [y] = [-z]
     // [0, 1,  0]   [z]   [ y]
     private newIndexRotX(x: i32, y: i32, z: i32): i32 {
-        return this.dimz * this.dimy * x + this.dimy * (this.dimz - 1 - z) + y;
+        return this.dimZ * this.dimY * x + this.dimY * (this.dimZ - 1 - z) + y;
     }
 
     // [ 0, 0, 1]   [x]   [ z]
     // [ 0, 1, 0] * [y] = [ y]
     // [-1, 0, 0]   [z]   [-x]
     private newIndexRotY(x: i32, y: i32, z: i32): i32 {
-        return this.dimy * this.dimx * z + this.dimx * y + (this.dimx - 1 - x);
+        return this.dimY * this.dimX * z + this.dimX * y + (this.dimX - 1 - x);
     }
 
     // [0, -1, 0]     [x]   [-y]
     // [1,  0, 0]  *  [y] = [ x]
     // [0,  0, 1]     [z]   [ z]
     private newIndexRotZ(x: i32, y: i32, z: i32): i32 {
-        return this.dimx * this.dimz * (this.dimy - 1 - y) + this.dimz * x + z;
+        return this.dimX * this.dimZ * (this.dimY - 1 - y) + this.dimZ * x + z;
     }
 
     at(x: i32, y: i32, z: i32): boolean {
-        const mask = 1 << (this.dimy * this.dimz * x + this.dimz * y + z);
+        const mask = 1 << (this.dimY * this.dimZ * x + this.dimZ * y + z);
         return (this.space & mask) !== 0;
     }
 
     toggle(x: i32, y: i32, z: i32): void {
-        const mask = 1 << this.dimy * this.dimz * x + this.dimz * y + z;
+        const mask = 1 << this.dimY * this.dimZ * x + this.dimZ * y + z;
         this.space ^= mask;
     }
 
     set(x: i32, y: i32, z: i32, val: boolean): void {
-        const mask = 1 << this.dimy * this.dimz * x + this.dimz * y + z;
+        const mask = 1 << this.dimY * this.dimZ * x + this.dimZ * y + z;
         if (val) {
             this.space |= mask;
         } else {
@@ -230,83 +226,83 @@ export default class VoxelSpace {
 
     rotated90X(): VoxelSpace {
         let newSpace = 0;
-        for (let x = 0; x < this.dimx; x++) {
-            for (let y = 0; y < this.dimy; y++) {
-                for (let z = 0; z < this.dimz; z++) {
+        for (let x = 0; x < this.dimX; x++) {
+            for (let y = 0; y < this.dimY; y++) {
+                for (let z = 0; z < this.dimZ; z++) {
                     if (this.at(x, y, z)) {
                         newSpace |= 1 << this.newIndexRotX(x, y, z);
                     }
                 }
             }
         }
-        return new VoxelSpace(this.id, this.dimx, this.dimz, this.dimy, newSpace);
+        return new VoxelSpace(this.id, this.dimX, this.dimZ, this.dimY, newSpace);
     }
 
     rotated90Y(): VoxelSpace {
         let newSpace = 0;
-        for (let x = 0; x < this.dimx; x++) {
-            for (let y = 0; y < this.dimy; y++) {
-                for (let z = 0; z < this.dimz; z++) {
+        for (let x = 0; x < this.dimX; x++) {
+            for (let y = 0; y < this.dimY; y++) {
+                for (let z = 0; z < this.dimZ; z++) {
                     if (this.at(x, y, z)) {
                         newSpace |= 1 << this.newIndexRotY(x, y, z);
                     }
                 }
             }
         }
-        return new VoxelSpace(this.id, this.dimz, this.dimy, this.dimx, newSpace);
+        return new VoxelSpace(this.id, this.dimZ, this.dimY, this.dimX, newSpace);
     }
 
     rotated90Z(): VoxelSpace {
         let newSpace = 0;
-        for (let x = 0; x < this.dimx; x++) {
-            for (let y = 0; y < this.dimy; y++) {
-                for (let z = 0; z < this.dimz; z++) {
+        for (let x = 0; x < this.dimX; x++) {
+            for (let y = 0; y < this.dimY; y++) {
+                for (let z = 0; z < this.dimZ; z++) {
                     if (this.at(x, y, z)) {
                         newSpace |= 1 << this.newIndexRotZ(x, y, z);
                     }
                 }
             }
         }
-        return new VoxelSpace(this.id, this.dimy, this.dimx, this.dimz, newSpace);
+        return new VoxelSpace(this.id, this.dimY, this.dimX, this.dimZ, newSpace);
     }
 
     rot90X(): void {
         const rot = this.rotated90X();
         this.space = rot.getRaw();
-        this.dimx = rot.dimx;
-        this.dimy = rot.dimy;
-        this.dimz = rot.dimz;
+        this.dimX = rot.dimX;
+        this.dimY = rot.dimY;
+        this.dimZ = rot.dimZ;
     }
 
     rot90Y(): void {
         const rot = this.rotated90Y();
         this.space = rot.getRaw();
-        this.dimx = rot.dimx;
-        this.dimy = rot.dimy;
-        this.dimz = rot.dimz;
+        this.dimX = rot.dimX;
+        this.dimY = rot.dimY;
+        this.dimZ = rot.dimZ;
     }
 
     rot90Z(): void {
         const rot = this.rotated90Z();
         this.space = rot.getRaw();
-        this.dimx = rot.dimx;
-        this.dimy = rot.dimy;
-        this.dimz = rot.dimz;
+        this.dimX = rot.dimX;
+        this.dimY = rot.dimY;
+        this.dimZ = rot.dimZ;
     }
 
     plus(space: VoxelSpace): VoxelSpace | null {
         const otherSpace = space.getRaw();
         if ((this.space | otherSpace) == (this.space ^ otherSpace)) {
-            return new VoxelSpace(this.id, this.dimx, this.dimy, this.dimz, otherSpace | this.space);
+            return new VoxelSpace(this.id, this.dimX, this.dimY, this.dimZ, otherSpace | this.space);
         }
         return null;
     }
 
     size(): i32 {
         let size = 0;
-        for (let x = 0; x < this.dimx; x++) {
-            for (let y = 0; y < this.dimy; y++) {
-                for (let z = 0; z < this.dimz; z++) {
+        for (let x = 0; x < this.dimX; x++) {
+            for (let y = 0; y < this.dimY; y++) {
+                for (let z = 0; z < this.dimZ; z++) {
                     if (this.at(x, y, z)) {
                         size++;
                     }
@@ -316,11 +312,11 @@ export default class VoxelSpace {
         return size;
     }
 
-    getAllPermutationsInCubeOfSize(dim: i32): VoxelSpace[] {
+    getAllPermutationsInPrism(prismDimX: i32, prismDimY: i32, prismDimZ: i32): VoxelSpace[] {
         const rotations = this.getUniqueRotations();
         let result = new Array<VoxelSpace>();
         for (let i = 0; i < rotations.length; i++) {
-            result = result.concat(rotations[i].getAllPositionsInCube(dim));
+            result = result.concat(rotations[i].getAllPositionsInPrism(prismDimX, prismDimY, prismDimZ));
         }
         return result;
     }

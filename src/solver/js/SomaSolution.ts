@@ -1,8 +1,7 @@
 import type VoxelSpaceBoolean from "./VoxelSpaceBoolean";
-import type VoxelSpaceBigInt from "./VoxelSpaceBigInt";
 
 export default class SomaSolution {
-    private solutionSpaces: (VoxelSpaceBoolean | VoxelSpaceBigInt)[];
+    private solutionSpaces: VoxelSpaceBoolean[];
     private dimX: number;
     private dimY: number;
     private dimZ: number;
@@ -59,7 +58,7 @@ export default class SomaSolution {
         return true;
     }
 
-    addSpace(space: VoxelSpaceBoolean | VoxelSpaceBigInt) {
+    addSpace(space: VoxelSpaceBoolean) {
         this.solutionSpaces.push(space);
     }
 

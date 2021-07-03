@@ -1,24 +1,24 @@
 <script lang="ts">
-    import {somaDimension, polycubes, selectedCube, showingSolution} from "../store";
+    import {somaDimX, somaDimY, somaDimZ, polycubes, selectedCube, showingSolution} from "../store";
+    import VoxelSpaceBoolean from "../VoxelSpaceBoolean";
     export let cubeNo: number;
 
-    $: dimension = $somaDimension;
-    $: cube = $polycubes[cubeNo];
-    $: cubeColor = cube.color;
+    $: cube = $polycubes[cubeNo] as VoxelSpaceBoolean;
+    $: cubeColor = cube.getColor();
     $: currentlyVisualised = $selectedCube === cubeNo && !$showingSolution;
     let cellStartDragInitialVal: boolean = false;
     let cellStartDrag: number = 0;
     let cellDragStartPos: {x: number, y: number} = {x: 0, y: 0};
     let cellEndDrag: number = 0;
     let cellDragEndPos: {x: number, y: number} = {x: 0, y: 0};
+    let picker: HTMLInputElement;
 
     function cellNo(x: number, y: number, z: number) {
-        return dimension ** 2 * x + dimension * y + z;
+        return $somaDimY * $somaDimZ * x + $somaDimZ * y + z;
     }
 
-    function at(rep: bigint, x: number, y: number, z: number) {
-        const mask = BigInt(1) << BigInt(cellNo(x, y, z));
-        return (rep & mask) !== BigInt(0);
+    function at(cube: VoxelSpaceBoolean, x: number, y: number, z: number) {
+        return cube.at(x, y, z);
     }
 
     function onMouseOverCell(event: MouseEvent, x: number, y: number, z: number) {
@@ -30,7 +30,7 @@
 
     function onMouseDownCell(event: MouseEvent, x: number, y: number, z: number) {
         cellStartDrag = cellNo(x, y, z);
-        cellStartDragInitialVal = at(cube.rep, x, y, z);
+        cellStartDragInitialVal = at(cube, x, y, z);
         cellDragStartPos.x = event.clientX;
         cellDragStartPos.y = event.clientY;
     }
@@ -56,29 +56,43 @@
 
     function onClickCube() {
         showingSolution.set(false);
-        selectedCube.set(cubeNo)
+        selectedCube.set(cubeNo);
+    }
+
+    function onColorChange(event: InputEvent) {
+        polycubes.setColor(cubeNo, event.target.value);
     }
 </script>
 
 <div
     class="cube"
     class:active={currentlyVisualised}
-    style="--color: {cubeColor}; --dimension: {dimension};"
+    style="--color: {cubeColor};"
     on:contextmenu|preventDefault
     on:mousedown={onClickCube}
 >
-    <h1>Cube: {cubeNo + 1}</h1>
-    {#each {length: dimension} as _, x}
+    <div class="header">
+        <h1>Cube: {cubeNo + 1}</h1>
+        <div class="colorPickerBtn" on:click={picker.click()}>
+            <input
+                bind:this={picker}
+                class="colorPicker"
+                type="color"
+                value="{cubeColor}"
+                on:change={(event) => onColorChange(event)}/>
+        </div>
+    </div>
+    {#each {length: $somaDimX} as _, x}
         <div class="layer">
-            {#each {length: dimension} as _, y}
+            {#each {length: $somaDimY} as _, y}
                 <div class="row">
-                {#each {length: dimension} as _, z}
+                {#each {length: $somaDimZ} as _, z}
                     <div
                         class="cell"
-                        class:filled={at(cube.rep, z, dimension-1-x, y)}
-                        on:mousemove={(event) => onMouseOverCell(event, z, dimension-1-x, y)}
-                        on:mousedown={(event) => onMouseDownCell(event, z, dimension-1-x, y)}
-                        on:mouseup={(event) => onMouseUpCell(event, z, dimension-1-x, y)}
+                        class:filled={at(cube, x, y, z)}
+                        on:mousemove={(event) => onMouseOverCell(event, x, y, z)}
+                        on:mousedown={(event) => onMouseDownCell(event, x, y, z)}
+                        on:mouseup={(event) => onMouseUpCell(event, x, y, z)}
                     />
                 {/each}
                 </div>
@@ -90,6 +104,27 @@
 <style>
     * {
         --cell-size: 30px;
+    }
+    .header {
+        text-align: center;
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+    }
+    .header > * {
+        display: inline-block;
+    }
+    .colorPicker {
+        visibility: hidden;
+        width: 0;
+        height: 0;
+    }
+    .colorPickerBtn {
+        align-self: center;
+        background-image: url("../resources/ColorWheel.png");
+        background-size: cover;
+        width: 1.5em;
+        height: 1.5em;
     }
     .cube.active {
         border: 3px solid #ff3e00;
@@ -125,6 +160,8 @@
     }
     .row {
         display: flex;
+        align-content: center;
+        justify-content: center;
         margin: 0;
     }
     .layer {

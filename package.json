@@ -2,11 +2,14 @@
   "name": "soma",
   "version": "1.0.0",
   "description": "Custom Somaesque cube solver webapp",
+  "main": "src/desktop/main.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "author": "Daniel Ledda",
   "license": "ISC",
@@ -16,6 +19,9 @@
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/three": "^0.128.0",
+    "electron": "^13.1.2",
+    "electron-builder": "^22.11.7",
+    "electron-winstaller": "^5.0.0",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
@@ -28,9 +34,25 @@
   },
   "dependencies": {
     "as-bind": "^0.7.1",
+    "electron-squirrel-startup": "^1.0.0",
     "sirv-cli": "^1.0.0",
     "source-map-support": "^0.5.19",
     "three": "^0.128.0",
     "typescript": "^4.4.0-dev.20210525"
+  },
+  "build": {
+    "appId": "de.djledda.somaesque",
+    "copyright": "Copyright © 2021 Daniel Ledda",
+    "win": {
+      "target": ["portable"]
+    },
+    "files": [
+      "**/*",
+      "./public/**",
+      "./src/desktop${/*}"
+    ],
+    "directories": {
+      "output": "desktop-dist"
+    }
   }
 }

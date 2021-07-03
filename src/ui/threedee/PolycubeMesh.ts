@@ -1,20 +1,20 @@
 import * as THREE from "three";
-import type VoxelSpace from "../../VoxelSpace";
+import type VoxelSpaceBoolean from "../../VoxelSpaceBoolean";
 import type GeometryManager from "./GeometryManager";
+import type VoxelSpaceBigInt from "../../VoxelSpaceBigInt";
 
 export default class PolycubeMesh {
     private static geometryManager: GeometryManager;
     private group: THREE.Group;
     private meshes: THREE.Mesh[] = [];
-    private currentPolycube: bigint = 0n;
+    private currentPolycube: boolean[] | bigint = [];
     private material: THREE.MeshPhongMaterial;
     private numActiveCubes: number = 0;
     private flyDirection: THREE.Vector3 = new THREE.Vector3();
 
-    constructor(polycube: VoxelSpace, color: string) {
-        this.material = new THREE.MeshPhongMaterial({color: 'red', shininess: 100, reflectivity: 100});
+    constructor(polycube: VoxelSpaceBoolean | VoxelSpaceBigInt) {
+        this.material = new THREE.MeshPhongMaterial({color: polycube.getColor(), shininess: 100, reflectivity: 100});
         this.group = new THREE.Group();
-        this.swapColor(color);
         this.swapPolycube(polycube);
     }
 
@@ -22,11 +22,7 @@ export default class PolycubeMesh {
         PolycubeMesh.geometryManager = manager;
     }
 
-    swapColor(color: string) {
-        this.material.color.set(color);
-    }
-
-    swapPolycube(polycube: VoxelSpace) {
+    swapPolycube(polycube: VoxelSpaceBoolean | VoxelSpaceBigInt) {
         if (polycube.getRaw() === this.currentPolycube) {
             return;
         }
@@ -40,10 +36,11 @@ export default class PolycubeMesh {
             }
         });
         this.currentPolycube = polycube.getRaw();
+        this.material.color.set(polycube.getColor());
         this.flyDirection = this.middlePosOfGroup().normalize();
     }
 
-    private addCube(refPolycube: VoxelSpace, x: number, y: number, z: number) {
+    private addCube(refPolycube: VoxelSpaceBoolean | VoxelSpaceBigInt, x: number, y: number, z: number) {
         const dims = refPolycube.getDims();
         const neighbourProfile = refPolycube.getDirectNeighbourProfile(x, y, z);
         const mesh = new THREE.Mesh(
@@ -51,9 +48,9 @@ export default class PolycubeMesh {
             this.material
         );
         mesh.position.set(
-            -((dims[0] - 1)/2) + x,
-            -((dims[1] - 1)/2) + y,
             -((dims[2] - 1)/2) + z,
+            ((dims[0] - 1)/2) - x,
+            -((dims[1] - 1)/2) + y,
         );
         this.meshes.push(mesh);
         this.group.add(mesh);

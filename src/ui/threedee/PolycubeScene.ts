@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import type SomaSolution from "../../SomaSolution";
 import RotationControl from "./RotationControl";
 import PolycubeMesh from "./PolycubeMesh";
-import VoxelSpace, {DimensionDef} from "../../VoxelSpace";
+import type VoxelSpaceBoolean from "../../VoxelSpaceBoolean";
+import type VoxelSpaceBigInt from "../../VoxelSpaceBigInt";
 import GeometryManager from "./GeometryManager";
 
 export default class PolycubeScene {
@@ -44,20 +45,19 @@ export default class PolycubeScene {
         this.camera.lookAt(0, 0, 0);
     }
 
-    private showPolycube(polycube: bigint, dims: number, color: string) {
+    showPolycube(voxelSpace: VoxelSpaceBoolean) {
         this.controls.disableFly();
-        const voxelSpace = new VoxelSpace(0, [dims, dims, dims], polycube, true);
         this.clearScene();
-        this.addPolycube(voxelSpace, color);
+        this.addPolycube(voxelSpace);
         this.polycubeMeshes[0].center();
     }
 
-    private showSolution(solution: SomaSolution, colorMap: Record<number, string>) {
+    showSolution(solution: SomaSolution) {
         this.controls.enableFly();
         this.clearScene();
         const pieces = solution.getPieces();
         for (let i = 0; i < pieces.length; i++) {
-            this.addPolycube(pieces[i], colorMap[i]);
+            this.addPolycube(pieces[i]);
         }
     }
 
@@ -66,8 +66,8 @@ export default class PolycubeScene {
         this.cubeScene.clear();
     }
 
-    private addPolycube(voxelSpace: VoxelSpace, color: string) {
-        const newMesh = new PolycubeMesh(voxelSpace, color);
+    private addPolycube(voxelSpace: VoxelSpaceBoolean | VoxelSpaceBigInt) {
+        const newMesh = new PolycubeMesh(voxelSpace);
         this.polycubeMeshes.push(newMesh);
         this.cubeScene.add(newMesh.asObj3D());
     }

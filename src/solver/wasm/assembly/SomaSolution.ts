@@ -2,12 +2,14 @@ import VoxelSpace from "./VoxelSpace";
 
 export default class SomaSolution {
     private solutionSpaces: VoxelSpace[];
-    private dim: i32;
-    constructor(dim: i32) {
-        if (dim < 0 || dim % 1 !== 0) {
-            throw new Error("Dimension must be a whole positive integer!");
-        }
-        this.dim = dim;
+    private dimX: i32;
+    private dimY: i32;
+    private dimZ: i32;
+
+    constructor(dimX: i32, dimY: i32, dimZ: i32) {
+        this.dimX = dimX;
+        this.dimY = dimY;
+        this.dimZ = dimZ;
         this.solutionSpaces = [];
     }
 
@@ -42,7 +44,7 @@ export default class SomaSolution {
         }
         const allRots: VoxelSpace[][] = this.solutionSpaces.map<VoxelSpace[]>(space => space.getAllRotations());
         for (let i = 0; i < allRots[0].length; i++) {
-            const solnRot = new SomaSolution(this.dim);
+            const solnRot = new SomaSolution(this.dimX, this.dimY, this.dimZ);
             for (let j = 0; j < allRots.length; j++) {
                 solnRot.addSpace(allRots[j][i]);
             }
@@ -74,13 +76,9 @@ export default class SomaSolution {
     }
 
     clone(): SomaSolution {
-        const clone = new SomaSolution(this.dim);
+        const clone = new SomaSolution(this.dimX, this.dimY, this.dimZ);
         clone.solutionSpaces = this.solutionSpaces.slice(0, this.solutionSpaces.length);
         return clone;
-    }
-
-    getDims(): i32[] {
-        return [this.dim, this.dim, this.dim];
     }
 
     getPieces(): VoxelSpace[] {

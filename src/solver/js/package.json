@@ -1,0 +1,11 @@
+{
+  "name": "soma-solve-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npx tsc main.ts --target ES2020 --moduleResolution node"
+  },
+  "author": "Daniel Ledda",
+  "license": "ISC"
+}
