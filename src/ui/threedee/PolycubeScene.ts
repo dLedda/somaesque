@@ -6,34 +6,44 @@ import type VoxelSpaceBoolean from "../../VoxelSpaceBoolean";
 import type VoxelSpaceBigInt from "../../VoxelSpaceBigInt";
 import GeometryManager from "./GeometryManager";
 
+const DEFAULT_WIDTH = 640;
+const DEFAULT_HEIGHT = 480;
+
 export default class PolycubeScene {
     private renderer: THREE.WebGLRenderer;
-    private camera: THREE.Camera;
+    private camera: THREE.PerspectiveCamera;
     private mainScene: THREE.Scene;
     private polycubeMeshes: PolycubeMesh[] = [];
     private controls: RotationControl;
     private light: THREE.Light;
     private cubeScene: THREE.Scene;
     private geomManager: GeometryManager;
+    private canvas: HTMLCanvasElement;
+    private loadedCb: () => void = () => {};
+    private loaded: boolean = false;
 
-    constructor(el: HTMLCanvasElement, onReady: () => any, onError: (err: Error) => any) {
-        this.init(el).then(onReady).catch(onError);
+    constructor() {
+        this.init().then(() => this.loadedCb()).catch(e => console.log(e));
     }
 
-    private async init(el: HTMLCanvasElement) {
-        this.renderer = new THREE.WebGLRenderer({canvas: el, antialias: true});
-        this.setupCamera(el.clientWidth / el.clientHeight);
+    private async init() {
+        this.canvas = document.createElement("canvas");
+        this.canvas.width = 0;
+        this.canvas.height = 0;
+        this.renderer = new THREE.WebGLRenderer({canvas: this.canvas, antialias: true});
+        this.setupCamera(this.canvas.clientWidth / this.canvas.clientHeight);
         this.setupLight();
         this.mainScene = new THREE.Scene();
         this.cubeScene = new THREE.Scene();
         this.mainScene.add(this.cubeScene, this.camera, this.light);
         this.cubeScene.rotateX(Math.PI/4);
         this.cubeScene.rotateY(Math.PI/4);
-        this.controls = new RotationControl(this.cubeScene, this.polycubeMeshes, this.camera, el);
+        this.controls = new RotationControl(this.cubeScene, this.polycubeMeshes, this.camera, this.canvas);
         this.geomManager = await new GeometryManager('../resources/', () => {
             requestAnimationFrame((timestamp) => this.render(timestamp));
         });
         PolycubeMesh.setManager(this.geomManager);
+        this.loaded = true;
     }
 
     private setupCamera(aspect: number) {
@@ -43,6 +53,26 @@ export default class PolycubeScene {
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         this.camera.position.z = 6;
         this.camera.lookAt(0, 0, 0);
+    }
+
+    mount(el: HTMLDivElement) {
+        this.canvas.width = DEFAULT_WIDTH;
+        this.canvas.height = DEFAULT_HEIGHT;
+        this.camera.aspect = this.canvas.width / this.canvas.height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.canvas.width, this.canvas.height);
+        el.append(this.canvas);
+    }
+
+    onLoaded(cb: () => void) {
+        if (this.loaded) {
+            cb();
+        }
+        this.loadedCb = cb;
+    }
+
+    isLoaded(): boolean {
+        return this.loaded;
     }
 
     showPolycube(voxelSpace: VoxelSpaceBoolean) {

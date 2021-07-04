@@ -38,20 +38,12 @@
 		color: white;
 		background: #333333;
 	}
-	@media(max-width: 1600px) {
-		.solutionBodyContainer {
-			width: 100%;
-		}
-		.sidebarContainer {
-			width: 20%;
-		}
-	}
 	@media(max-width: 1200px) {
 		.solutionBodyContainer {
-			width: 100%;
+			width: calc(100% - 18em);
 		}
-			.sidebarContainer {
-			width: 15em;
+		.sidebarContainer {
+			width: 18em;
 		}
 	}
 </style>

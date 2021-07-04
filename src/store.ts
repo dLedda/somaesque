@@ -3,9 +3,10 @@ import { get } from 'svelte/store';
 import SomaSolution from "./SomaSolution";
 import VoxelSpaceBigInt from "./VoxelSpaceBigInt";
 import type {DimensionDef} from "./VoxelSpaceBoolean";
+import PolycubeScene from "./ui/threedee/PolycubeScene";
 
-const MAX_DIMS = 20;
-const MIN_DIMS = 1;
+export const MAX_DIMS = 20;
+export const MIN_DIMS = 1;
 
 export const solving = writable(false);
 export const debug = writable(false);
@@ -29,11 +30,19 @@ export const isMinPolycubes = derived(
     polycubes,
     ($polycubes: VoxelSpaceBigInt[]) => $polycubes.length <= 1
 );
+export const cubeScene = new PolycubeScene();
+
 
 function dimStore(init: number) {
     const dimStore = writable(init);
     return {
         subscribe: dimStore.subscribe,
+        inc() {
+            dimStore.set(get(dimStore) + 1);
+        },
+        dec() {
+            dimStore.set(get(dimStore) - 1);
+        },
         set(dim: number) {
             if (dim > MAX_DIMS || dim < MIN_DIMS) {
                 return;

@@ -1,38 +1,35 @@
 <script lang="ts">
     import PolycubeScene from "./threedee/PolycubeScene";
     import {onMount} from "svelte";
-    import {polycubes, selectedCube, solutions, activeSolution, showingSolution, somaDimX, somaDimY, somaDimZ} from "../store";
+    import {polycubes, selectedCube, solutions, activeSolution, showingSolution, cubeScene} from "../store";
     import Solution2D from "./Solution2D.svelte";
-    import VoxelSpaceBoolean from "../VoxelSpaceBoolean";
 
     $: cube = $polycubes[$selectedCube];
     $: soln = $solutions[$activeSolution];
-    let el: HTMLCanvasElement;
+    let el: HTMLDivElement;
     let scene: PolycubeScene;
     let loaded: boolean = false;
 
+    const canvasStyle: Partial<CSSStyleDeclaration> = {
+        borderRadius: "1em",
+    };
+
     onMount(() => {
-        scene = new PolycubeScene(el, () => loaded = true, console.log);
+        cubeScene.onLoaded(() => {
+            cubeScene.mount(el);
+            Object.assign((el.children.item(0) as HTMLElement).style, canvasStyle);
+            loaded = true;
+        });
     });
-
-    window.getPermutations = () => {
-        const newCube: VoxelSpaceBoolean = cube.clone() as VoxelSpaceBoolean;
-        (newCube as VoxelSpaceBoolean).cullEmptySpace();
-        return (newCube as VoxelSpaceBoolean).getAllPermutationsInPrism($somaDimX, $somaDimY, $somaDimZ);
-    }
-
-    window.showRot = (rot: VoxelSpaceBoolean) => {
-        scene?.showPolycube(rot);
-    }
 
     $: {
         if (loaded) {
             if ($showingSolution) {
                 const colorMap = {};
                 $polycubes.forEach((polycube, i) => colorMap[i] = polycube.color);
-                scene?.showSolution(soln);
+                cubeScene.showSolution(soln);
             } else {
-                scene?.showPolycube(cube);
+                cubeScene.showPolycube(cube);
             }
         }
     }
@@ -44,11 +41,7 @@
             <Solution2D/>
         </div>
     {/if}
-    <canvas
-        bind:this={el}
-        width="640"
-        height="480"
-    ></canvas>
+    <div class="stage" bind:this={el}></div>
 </div>
 
 <style>
@@ -58,10 +51,7 @@
         align-items: center;
     }
     .soln2d-container {
+        flex: 0 1 auto;
         display: inline-block;
-    }
-    canvas {
-        display: inline-block;
-        border-radius: 1em;
     }
 </style>

@@ -51,6 +51,7 @@
       "./public/**",
       "./src/desktop${/*}"
     ],
+    "icon": "./public/resources/soma_icon.png",
     "directories": {
       "output": "desktop-dist"
     }
