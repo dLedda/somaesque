@@ -3,12 +3,12 @@
     export let down: () => void;
     export let val: number;
     export let upDisabled: boolean;
-    export let title: string;
+    export let title: string = "";
     export let downDisabled: boolean;
 </script>
 
 <div class="container">
-    {#if title}
+    {#if title !== ""}
         <p class="title">{title}</p>
     {/if}
     <div class="controls">
@@ -24,7 +24,7 @@
         display: inline-block;
     }
     .title {
-        margin-bottom: 0;
+        margin: 0;
     }
     .val {
         font-weight: bold;

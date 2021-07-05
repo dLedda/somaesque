@@ -1,8 +1,9 @@
 <script lang="ts">
-    import {polycubes} from "../store";
-    import CubeInput from "./CubeInput.svelte";
     import SolutionViewer from "./SolutionViewer.svelte";
-    $: numCubes = $polycubes.length;
+    import CubeInputSet from "./CubeInputSet.svelte";
+    import PolycubeScene from "./threedee/PolycubeScene";
+
+    export let scene: PolycubeScene;
     let showInput = true;
     let smallViewport = true;
 
@@ -24,37 +25,13 @@
             <div class="tab" class:selected={!showInput} on:click="{() => showInput = false}">3D</div>
         </div>
         {#if showInput}
-            <div class="input-container">
-                {#each {length: numCubes} as _, cubeNo}
-                    <div class="cube-input">
-                        <div class="padder">
-                            <CubeInput
-                                cubeNo={cubeNo}
-                            />
-                        </div>
-                    </div>
-                {/each}
-            </div>
+            <CubeInputSet/>
         {:else}
-            <div class="threedee">
-                <SolutionViewer/>
-            </div>
+            <SolutionViewer scene="{scene}"/>
         {/if}
     {:else}
-        <div class="input-container">
-            {#each {length: numCubes} as _, cubeNo}
-                <div class="cube-input">
-                    <div class="padder">
-                        <CubeInput
-                                cubeNo={cubeNo}
-                        />
-                    </div>
-                </div>
-            {/each}
-        </div>
-        <div class="threedee">
-            <SolutionViewer/>
-        </div>
+        <CubeInputSet/>
+        <SolutionViewer scene="{scene}"/>
     {/if}
 </div>
 
@@ -80,26 +57,6 @@
     .tab.selected {
         background-color: grey;
         border-width: 1px 0 0 0;
-    }
-    .threedee {
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        justify-content: center;
-        text-align: center;
-    }
-    .padder {
-        padding: 1em;
-    }
-    .cube-input {
-        margin: auto;
-    }
-    .input-container {
-        flex: 1 1 auto;
-        overflow-x: scroll;
-        display: flex;
-        flex-flow: row;
     }
     .viewport {
         overflow: scroll;

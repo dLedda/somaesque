@@ -46,10 +46,11 @@
     "win": {
       "target": ["portable"]
     },
-    "files": [
-      "**/*",
-      "./public/**",
-      "./src/desktop${/*}"
+    "linux": {
+      "target": ["AppImage"]
+    },
+    "extraResources": [
+      "public/solver"
     ],
     "icon": "./public/resources/soma_icon.png",
     "directories": {

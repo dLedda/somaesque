@@ -1,13 +1,15 @@
 <script lang="ts">
     import PolycubeScene from "./threedee/PolycubeScene";
     import {onMount} from "svelte";
-    import {polycubes, selectedCube, solutions, activeSolution, showingSolution, cubeScene} from "../store";
+    import {polycubes, solutions, activeSolution, showingSolution} from "../store";
     import Solution2D from "./Solution2D.svelte";
 
-    $: cube = $polycubes[$selectedCube];
+    export let scene: PolycubeScene;
+    const selectedStore = polycubes.selected();
+    $: selectedCube = $selectedStore;
+    $: cube = $polycubes[selectedCube];
     $: soln = $solutions[$activeSolution];
     let el: HTMLDivElement;
-    let scene: PolycubeScene;
     let loaded: boolean = false;
 
     const canvasStyle: Partial<CSSStyleDeclaration> = {
@@ -15,8 +17,8 @@
     };
 
     onMount(() => {
-        cubeScene.onLoaded(() => {
-            cubeScene.mount(el);
+        scene.onLoaded(() => {
+            scene.mount(el);
             Object.assign((el.children.item(0) as HTMLElement).style, canvasStyle);
             loaded = true;
         });
@@ -25,17 +27,15 @@
     $: {
         if (loaded) {
             if ($showingSolution) {
-                const colorMap = {};
-                $polycubes.forEach((polycube, i) => colorMap[i] = polycube.color);
-                cubeScene.showSolution(soln);
+                scene.showSolution(soln);
             } else {
-                cubeScene.showPolycube(cube);
+                scene.showPolycube(cube);
             }
         }
     }
 </script>
 
-<div class="top">
+<div class="container">
     {#if $activeSolution !== null}
         <div class="soln2d-container">
             <Solution2D/>
@@ -45,13 +45,17 @@
 </div>
 
 <style>
-    .top {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-    }
     .soln2d-container {
         flex: 0 1 auto;
         display: inline-block;
+    }
+    .container {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: space-evenly;
+        text-align: center;
+        align-items: center;
     }
 </style>

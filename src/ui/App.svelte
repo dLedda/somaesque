@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Sidebar from "./Sidebar.svelte";
-	import SolutionInteractor from "./Interactor.svelte";
+	import Stage from "./Stage.svelte";
+	import PolycubeScene from "./threedee/PolycubeScene";
+
+	export let scene: PolycubeScene;
 </script>
 
 <main>
@@ -8,7 +11,7 @@
 		<Sidebar />
 	</div>
 	<div class="solutionBodyContainer">
-		<SolutionInteractor />
+		<Stage scene="{scene}" />
 	</div>
 </main>
 

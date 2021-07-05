@@ -1,11 +1,12 @@
 <script lang="ts">
-    import {somaDimX, somaDimY, somaDimZ, polycubes, selectedCube, showingSolution} from "../store";
+    import {somaDimX, somaDimY, somaDimZ, polycubes, showingSolution} from "../store";
     import VoxelSpaceBoolean from "../VoxelSpaceBoolean";
     export let cubeNo: number;
 
     $: cube = $polycubes[cubeNo] as VoxelSpaceBoolean;
     $: cubeColor = cube.getColor();
-    $: currentlyVisualised = $selectedCube === cubeNo && !$showingSolution;
+    const currentlySelected = polycubes.selected();
+    $: currentlyVisualised = $currentlySelected === cubeNo && !$showingSolution;
     let cellStartDragInitialVal: boolean = false;
     let cellStartDrag: number = 0;
     let cellDragStartPos: {x: number, y: number} = {x: 0, y: 0};
@@ -24,7 +25,7 @@
     function onMouseOverCell(event: MouseEvent, x: number, y: number, z: number) {
         if (event.buttons !== 0) {
             polycubes.set(cubeNo, event.buttons === 1, x, y, z);
-            selectedCube.set(cubeNo);
+            polycubes.selected().set(cubeNo);
         }
     }
 
@@ -56,7 +57,7 @@
 
     function onClickCube() {
         showingSolution.set(false);
-        selectedCube.set(cubeNo);
+        currentlySelected.set(cubeNo);
     }
 
     function onColorChange(event: InputEvent) {

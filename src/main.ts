@@ -1,9 +1,10 @@
 import App from './ui/App.svelte';
+import PolycubeScene from "./ui/threedee/PolycubeScene";
 
 const app = new App({
 	target: document.body,
 	props: {
-		name: 'world'
+		scene: new PolycubeScene()
 	}
 });
 

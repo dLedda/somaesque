@@ -39,7 +39,7 @@ export default class PolycubeScene {
         this.cubeScene.rotateX(Math.PI/4);
         this.cubeScene.rotateY(Math.PI/4);
         this.controls = new RotationControl(this.cubeScene, this.polycubeMeshes, this.camera, this.canvas);
-        this.geomManager = await new GeometryManager('../resources/', () => {
+        this.geomManager = await new GeometryManager('./', () => {
             requestAnimationFrame((timestamp) => this.render(timestamp));
         });
         PolycubeMesh.setManager(this.geomManager);
