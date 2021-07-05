@@ -1,21 +1,9 @@
 <script lang="ts">
     import CubeInput from "./CubeInput.svelte";
-    import {polycubes, somaDimX, somaDimY, somaDimZ} from "../store";
+    import {polycubes} from "../store";
 
     export let numCubes;
     $: numCubes = $polycubes.length;
-
-    window.addEventListener("keypress", () => {
-        for (const cube of $polycubes) {
-            console.log({
-                name: "",
-                dimX: $somaDimX,
-                dimY: $somaDimY,
-                dimZ: $somaDimZ,
-                cubes: $polycubes.map(cube => ({space: cube.getRaw(), color: cube.getColor()})),
-            });
-        }
-    });
 </script>
 
 <div class="container">

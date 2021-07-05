@@ -93,10 +93,10 @@ export const examples = [
         dimY: 3,
         dimZ: 3,
         cubes: [
-            {space: 30n, color: "#ff0000"},
+            {space: 58n, color: "#ff0000"},
             {space: 29712n, color: "#ffff00"},
             {space: 29216n, color: "#00ff00"},
-            {space: 15392n, color: "#00ffff"},
+            {space: 30n, color: "#00ffff"},
             {space: 15364n, color: "#0000ff"},
             {space: 536871032n, color: "#ff00ff"},
         ],
@@ -114,4 +114,17 @@ export const examples = [
             {space: 120n, color: "#0000ff"},
         ],
     },
-];
+].concat(deserealiseSaves());
+
+function deserealiseSaves() {
+    return localStorage.getItem("saves")?.split("@").map(save => JSON.parse(save)) ?? [];
+}
+
+export function serialiseCurrentInput() {
+    return {
+        dimX: somaDimX.currentVal(),
+        dimY: somaDimY.currentVal(),
+        dimZ: somaDimZ.currentVal(),
+        cubes: polycubes.currentVal().map(cube => ({space: cube.getRaw().toString(), color: cube.getColor()})),
+    };
+}

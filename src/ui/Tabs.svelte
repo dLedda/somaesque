@@ -18,8 +18,9 @@
 
 <style>
     .container {
-        background-color: grey;
+        background-color: #666666;
         padding: 1em;
+        border-radius: 0 0 1em 1em;
     }
     .tabs {
         height: 3em;
@@ -39,6 +40,6 @@
         background-color: #999999;
     }
     .tab.selected {
-        background-color: grey;
+        background-color: #666666;
     }
 </style>
