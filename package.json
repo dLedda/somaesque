@@ -49,10 +49,7 @@
     "linux": {
       "target": ["AppImage"]
     },
-    "extraResources": [
-      "public/solver"
-    ],
-    "icon": "./public/resources/soma_icon.png",
+    "icon": "./public/favicon.png",
     "directories": {
       "output": "desktop-dist"
     }

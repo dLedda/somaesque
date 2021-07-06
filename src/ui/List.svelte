@@ -29,6 +29,10 @@
         list-style: none;
         height: 2em;
         line-height: 2em;
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     ul {
         position: absolute;

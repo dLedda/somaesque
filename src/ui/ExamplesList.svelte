@@ -1,67 +1,65 @@
 <script lang="ts">
     import List from "./List.svelte";
-    import {polycubes, examples, serialiseCurrentInput} from "../store";
+    import {polycubes, examples, save} from "../store";
     import VoxelSpaceBigInt from "../VoxelSpaceBigInt";
+    import ActionButton from "./ActionButton.svelte";
 
     const placeholder = "Give your puzzle a name";
-    let untouchedInput = true;
-    let currentName = placeholder;
-    let lastClickedExample = 0;
+    let untouchedInput: boolean = true;
+    let currentName: string = placeholder;
+    let lastClickedExample: number | null = null;
 
     function hydrateExample(exNo: number) {
-        const example = examples[exNo];
+        const example = $examples[exNo];
         polycubes.setCubes(example.cubes.map((cube, i) => new VoxelSpaceBigInt({
             id: i,
             dims: [example.dimX, example.dimY, example.dimZ],
-            space: cube.space,
+            space: BigInt(cube.space),
             color: cube.color,
             cullEmpty: false,
         })));
         lastClickedExample = exNo;
     }
 
+    function checkUntouched() {
+        if (currentName === "") {
+            untouchedInput = true;
+        } else {
+            untouchedInput = false;
+        }
+    }
+
     function onInput(e: InputEvent) {
         currentName = (e.target as HTMLInputElement).value;
+        checkUntouched();
     }
 
     function onFocusText(e: FocusEvent) {
         if (untouchedInput) {
             currentName = "";
-            untouchedInput = false;
         }
     }
 
     function onBlurText(e: FocusEvent) {
-        if (currentName === "") {
+        if (untouchedInput) {
             currentName = placeholder;
-            untouchedInput = true;
         }
-    }
-
-    function save() {
-        const save = serialiseCurrentInput();
-        save["name"] = currentName;
-        const saveString = JSON.stringify(save);
-        let oldSaves = window.localStorage.getItem("saves");
-        if (oldSaves !== null) {
-            oldSaves += "@";
-        } else {
-            oldSaves = "";
-        }
-        window.localStorage.setItem("saves", oldSaves + saveString);
     }
 </script>
 
 <div class="container">
     <List
         defaultText="No examples found..."
-        items="{examples.map(example => example.name)}"
+        items="{$examples.map(example => example.name)}"
         activeItem={lastClickedExample}
         onClick={(i) => hydrateExample(i)}
     />
 </div>
-<div class="flex">
-    <button on:click={save}>Save as...</button>
+<div class="save">
+    <ActionButton
+        onClick={() => save(currentName)}
+        text={"Save as..."}
+        disabled={untouchedInput}/>
     <input
         class:untouchedInput
         value="{currentName}"
@@ -75,11 +73,22 @@
     .untouchedInput {
         color: grey;
     }
-    button {
+    .save {
         white-space: nowrap;
-    }
-    .flex {
         display: flex;
+        flex-wrap: wrap;
+        row-gap: 1em;
+        align-items: center;
+        justify-content: space-evenly;
+        margin-top: 1em;
+    }
+    input {
+        flex-basis: 10em;
+        flex: 1;
+        max-width: 100%;
+        min-width: 50%;
+        margin: 0 0 0 0.5em;
+        width: 100%;
     }
     .container {
         height: 10em;

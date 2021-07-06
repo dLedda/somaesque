@@ -20,5 +20,6 @@
 <style>
     .container {
         height: 100%;
+        min-height: 10em;
     }
 </style>

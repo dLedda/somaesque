@@ -13,7 +13,7 @@ import {
     totalVolume
 } from "./store";
 
-const worker = new Worker('./solver/main.js', {type: 'module'});
+const worker = new Worker('./worker.js', {type: 'module'});
 async function respondWasm(event: MessageEvent) {
     solutions.set(event.data.map((wasmSolution) => {
         const solnObj = new SomaSolution(somaDimX.currentVal(), somaDimY.currentVal(), somaDimZ.currentVal());

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {polycubes, solving, somaDimX, somaDimY, somaDimZ, totalVolume} from "../store";
     import {solve} from "../solve";
+    import ActionButton from "./ActionButton.svelte";
 
     $: cubes = $polycubes;
     let noEmpties: boolean;
@@ -26,29 +27,40 @@
     }
 </script>
 
-<button
-    class="solve"
-    on:click={solve}
-    title="{genTooltip(enoughSubcubes, noEmpties, size)}"
-    disabled="{$solving || !readyToSolve}">
-    {$solving ? "Solving..." : "Solve!"}
-</button>
+<div class="container">
+    <div class="solve">
+        <ActionButton
+            onClick={solve}
+            tooltip={genTooltip(enoughSubcubes, noEmpties, size)}
+            disabled={$solving || !readyToSolve}
+            text={$solving ? "Solving..." : "Solve!"}/>
+    </div>
+    {#if $totalVolume > 32}
+        <p class="warn">The total number of units exceeds 32. Attempting to solve puzzles with more than 32 units results in significantly slower computation time.</p>
+    {/if}
+</div>
 
 <style>
-    button.solve {
-        width: auto;
-        color: white;
-        background-color: #ff3e00;
-        font-size: 2em;
-        border-radius: 0.5em;
-        border-style: none;
-        margin: 0;
-        cursor: pointer;
+    .container {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
     }
-    button.solve:disabled {
+    .warn {
+        flex-basis: 7em;
+        flex: 1;
+        min-width: 7em;
+        margin-left: 1em;
+        color: red;
+        text-align: left;
+    }
+    .solve {
+        height: min-content;
         width: auto;
-        color: #999999;
-        background-color: #a36754;
         font-size: 2em;
+        margin: 0;
     }
 </style>

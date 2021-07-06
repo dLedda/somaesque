@@ -122,7 +122,7 @@
     }
     .colorPickerBtn {
         align-self: center;
-        background-image: url("../resources/ColorWheel.png");
+        background-image: url("./ColorWheel.png");
         background-size: cover;
         width: 1.5em;
         height: 1.5em;

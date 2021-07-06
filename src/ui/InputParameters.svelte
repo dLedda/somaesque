@@ -32,9 +32,6 @@
             downDisabled="{$somaDimZ <= PolycubeStore.MIN_DIMS}"
             down="{() => somaDimZ.set($somaDimZ - 1)}"
     />
-    {#if $totalVolume > 32}
-        <p class="warn">The total number of units exceeds 32. Attempting to solve puzzles with more than 32 units results in significantly slower computation time.</p>
-    {/if}
 </div>
 
 <div class="option">
@@ -49,7 +46,4 @@
 </div>
 
 <style>
-    .warn {
-        color: red;
-    }
 </style>

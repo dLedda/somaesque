@@ -21,8 +21,10 @@ export default class PolycubeScene {
     private canvas: HTMLCanvasElement;
     private loadedCb: () => void = () => {};
     private loaded: boolean = false;
+    private windowDims: {width: number, height: number};
 
-    constructor() {
+    constructor(windowDims?: {width: number, height: number}) {
+        this.windowDims = windowDims ?? {width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT};
         this.init().then(() => this.loadedCb()).catch(e => console.log(e));
     }
 
@@ -56,12 +58,24 @@ export default class PolycubeScene {
     }
 
     mount(el: HTMLDivElement) {
-        this.canvas.width = DEFAULT_WIDTH;
-        this.canvas.height = DEFAULT_HEIGHT;
+        this.updateDims(this.windowDims);
+        el.append(this.canvas);
+    }
+
+    updateDims(windowDims: {width: number, height: number}) {
+        this.windowDims.width = windowDims.width;
+        this.windowDims.height = windowDims.height;
+        this.canvas.width = this.windowDims.width;
+        this.canvas.height = this.windowDims.height;
         this.camera.aspect = this.canvas.width / this.canvas.height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.canvas.width, this.canvas.height);
-        el.append(this.canvas);
+    }
+
+    resetDims() {
+        this.windowDims.width = DEFAULT_WIDTH;
+        this.windowDims.height = DEFAULT_HEIGHT;
+        this.updateDims(this.windowDims);
     }
 
     onLoaded(cb: () => void) {

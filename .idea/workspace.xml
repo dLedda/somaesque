@@ -26,14 +26,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70635ef7-86ab-4681-b98d-dc8e4999995b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/public/ColorWheel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/resources/favicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/ActionButton.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solve.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/solve.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/App.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/App.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/CubeInputSet.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/CubeInputSet.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/ExamplesList.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ExamplesList.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/InputParameters.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/InputParameters.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/List.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/List.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/Sidebar.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Sidebar.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/SolutionList.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SolutionList.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/Tabs.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Tabs.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/SolutionViewer.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ThreeDee.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/SolveButton.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SolveButton.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/Stage.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Stage.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/threedee/PolycubeScene.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/threedee/PolycubeScene.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/threedee/RotationControl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/threedee/RotationControl.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +70,7 @@
         <option value="SolveButton.svelte" />
         <option value="ExamplesList.svelte" />
         <option value="List.svelte" />
+        <option value="ActionButton.svelte" />
       </list>
     </option>
   </component>
@@ -95,19 +107,19 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/public/resources" />
+      <recent name="$PROJECT_DIR$/public/build" />
+      <recent name="$PROJECT_DIR$/public/solver" />
+      <recent name="$PROJECT_DIR$/src/desktop" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/ui" />
       <recent name="$PROJECT_DIR$/public/resources" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/public/solver" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public" />
-      <recent name="$PROJECT_DIR$/public/build" />
-      <recent name="$PROJECT_DIR$/public/solver" />
-      <recent name="$PROJECT_DIR$/src/desktop" />
-      <recent name="$PROJECT_DIR$/src/solver/js" />
     </key>
   </component>
   <component name="RunManager">
@@ -156,6 +168,7 @@
       <workItem from="1625389803555" duration="21540000" />
       <workItem from="1625471453862" duration="708000" />
       <workItem from="1625489120282" duration="24129000" />
+      <workItem from="1625561814270" duration="14382000" />
     </task>
     <servers />
   </component>
@@ -218,10 +231,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="696" y="393" width="518" height="301" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1624963157966" />
-    <state x="2012" y="43" width="1720" height="903" key="DiffContextDialog" timestamp="1625505778555">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="92" y="69" width="1720" height="880" key="DiffContextDialog" timestamp="1625575561214">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="92" y="69" width="1720" height="880" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1624822125389" />
+    <state x="92" y="69" width="1720" height="880" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1625575561214" />
     <state x="2012" y="43" width="1720" height="903" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1625505778555" />
     <state x="743" y="301" width="716" height="623" key="FileChooserDialogImpl" timestamp="1621932819206">
       <screen x="0" y="27" width="1920" height="1053" />

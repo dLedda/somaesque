@@ -26,9 +26,9 @@
         margin: auto;
     }
     .container {
-        flex: 1 1 auto;
         overflow-x: scroll;
         display: flex;
+        width: 100%;
         flex-flow: row;
         margin: auto;
     }

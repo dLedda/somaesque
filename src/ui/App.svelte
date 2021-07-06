@@ -10,13 +10,14 @@
 	<div class="sidebarContainer">
 		<Sidebar />
 	</div>
-	<div class="solutionBodyContainer">
+	<div class="stage">
 		<Stage scene="{scene}" />
 	</div>
 </main>
 
 <style>
 	main {
+		position: relative;
 		display: flex;
 		height: 100%;
 		margin: 0;
@@ -25,28 +26,41 @@
 	 	background-color: black;
 	 	margin: 0;
 		padding: 0;
-		width: 20%;
+		max-width: 20%;
 		height: 100%;
 		display: inline-block;
 	}
-	.solutionBodyContainer {
+	.stage {
+		flex: 1;
 		background-color: grey;
 		margin: 0;
 		padding: 0;
-		width: 80%;
 		height: 100%;
+		width: 80%;
 		display: inline-block;
 	}
 	:global(body) {
 		color: white;
 		background: #333333;
 	}
-	@media(max-width: 1200px) {
-		.solutionBodyContainer {
-			width: calc(100% - 18em);
-		}
+	@media(width: 1200px) {
 		.sidebarContainer {
 			width: 18em;
+		}
+		.stage {
+			width: calc(80% - 18em);
+		}
+	}
+	@media(max-width: 1024px) {
+		.stage {
+			left: 2em;
+			position: absolute;
+			width: calc(100% - 2em);
+		}
+		.sidebarContainer {
+			position: absolute;
+			max-width: 100%;
+			z-index: 1;
 		}
 	}
 </style>

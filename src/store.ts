@@ -26,7 +26,14 @@ export const isMinPolycubes = derived(
     ($polycubes: VoxelSpaceBigInt[]) => $polycubes.length <= 1
 );
 
-export const examples = [
+type Save = {
+    name: string,
+    dimX: number,
+    dimY: number,
+    dimZ: number,
+    cubes: {space: bigint | string, color: string}[],
+};
+const builtInExamples: Save[] = [
     {
         name: "Standard Soma Cube",
         dimX: 3,
@@ -114,17 +121,34 @@ export const examples = [
             {space: 120n, color: "#0000ff"},
         ],
     },
-].concat(deserealiseSaves());
+];
 
-function deserealiseSaves() {
+export const examples = writable(builtInExamples.concat(deserealiseSaves()));
+
+function deserealiseSaves(): Save[] {
     return localStorage.getItem("saves")?.split("@").map(save => JSON.parse(save)) ?? [];
 }
 
-export function serialiseCurrentInput() {
+function serialiseCurrentInput(): Save {
     return {
+        name: "",
         dimX: somaDimX.currentVal(),
         dimY: somaDimY.currentVal(),
         dimZ: somaDimZ.currentVal(),
         cubes: polycubes.currentVal().map(cube => ({space: cube.getRaw().toString(), color: cube.getColor()})),
     };
+}
+
+export function save(name: string) {
+    const save = serialiseCurrentInput();
+    save.name = name;
+    const saveString = JSON.stringify(save);
+    let oldSaves = localStorage.getItem("saves");
+    if (oldSaves !== null) {
+        oldSaves += "@";
+    } else {
+        oldSaves = "";
+    }
+    localStorage.setItem("saves", oldSaves + saveString);
+    examples.update(examples => examples.concat(save));
 }

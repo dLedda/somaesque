@@ -1,5 +1,5 @@
 <script lang="ts">
-    import SolutionViewer from "./SolutionViewer.svelte";
+    import ThreeDee from "./ThreeDee.svelte";
     import CubeInputSet from "./CubeInputSet.svelte";
     import PolycubeScene from "./threedee/PolycubeScene";
 
@@ -12,7 +12,7 @@
     }
 
     const queryListWidth = window.matchMedia("(max-width: 1200px)");
-    const queryListHeight = window.matchMedia("(max-height: 920px)");
+    const queryListHeight = window.matchMedia("(max-height: 900px)");
     queryListWidth.addEventListener("change", onMediaChange);
     queryListHeight.addEventListener("change", onMediaChange);
     onMediaChange();
@@ -27,11 +27,11 @@
         {#if showInput}
             <CubeInputSet/>
         {:else}
-            <SolutionViewer scene="{scene}"/>
+            <ThreeDee scene="{scene}"/>
         {/if}
     {:else}
         <CubeInputSet/>
-        <SolutionViewer scene="{scene}"/>
+        <ThreeDee scene="{scene}"/>
     {/if}
 </div>
 
@@ -59,9 +59,9 @@
         border-width: 1px 0 0 0;
     }
     .viewport {
-        overflow: scroll;
         display: flex;
         height: 100%;
+        width: 100%;
         align-content: center;
         justify-content: flex-start;
         flex-direction: column;
