@@ -19,7 +19,6 @@ export default class PolycubeStore {
         this.dimX.subscribe(() => this.reset());
         this.dimY.subscribe(() => this.reset());
         this.dimZ.subscribe(() => this.reset());
-
     }
     
     private freshCube(id: number) {
